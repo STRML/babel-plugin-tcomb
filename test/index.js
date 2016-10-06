@@ -11,7 +11,8 @@ function trim(str) {
 
 const skipTests = {
   '.DS_Store': 1,
-  'assert': 1
+  'assert': 1,
+  'type-cycles': 1
 }
 
 const fixturesDir = path.join(__dirname, 'fixtures')
@@ -205,6 +206,28 @@ describe('globals option', () => {
     assert.equal(trim(actual), trim(expected))
   })
 
+})
+
+describe('type cycles', () => {
+
+  it('should handle type cycles', () => {
+    const fixtureDir = path.join(fixturesDir, 'type-cycles')
+    const actual = babel.transformFileSync(
+      path.join(fixtureDir, 'A.js'), {
+        babelrc: false,
+        plugins: [
+          'syntax-async-functions',
+          'syntax-flow',
+          [plugin, {
+            skipHelpers: true
+          }],
+          'transform-flow-strip-types'
+        ]
+      }
+    ).code
+    console.log(actual)
+    assert(false)
+  })
 })
 
 describe('emit asserts for: ', () => {
